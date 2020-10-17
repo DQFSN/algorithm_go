@@ -7,7 +7,7 @@
  * }
  */
 
- func copyRandomList(head *Node) *Node {
+func copyRandomList(head *Node) *Node {
 
     src := head
 
