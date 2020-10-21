@@ -1,66 +1,55 @@
 func permutation(s string) []string {
 
-    chars := []rune(s)
+	chars := []rune(s)
 
-    // fmt.Printf("%v\n",string(chars))
-    result := make([][]rune, 0, 20)
+	result := make([][]rune, 0, 20)
+	resultString := make([]string, 0, 20)
+	mapStr := make(map[string]bool)
 
-    for i := 0; i < len(chars); i++ {
-        
-        newResults := make([][]rune, 0)
+	for i := 0; i < len(chars); i++ {
 
-        for _, r := range result {
-            r = append(r, chars[i])
+		newResults := make([][]rune, 0)
 
-            for j, _ := range r {
-                // 记录原始的
-                srcR := r
-                // fmt.Printf("r---%v\t", string(r))
-                // r 为引用类型，需拷贝
-                copy := make([]rune, len(r), len(r))
-                for i, t := range r {
-                    copy[i] = t
-                }
+		for _, r := range result {
+			//剪枝
+			if len(r) != i {
+				continue
+			}
 
-                // copy := []rune(r)
-                r = copy
+			r = append(r, chars[i])
 
-                // tmp := r[j]
-                // r[j] =  r[len(r) - 1]
-                // r[len(r) - 1] = tmp
-                r[j], r[len(r) - 1] = r[len(r) - 1], r[j]
-                newResults = append(newResults, r)
-                r = srcR
-            }
-        }
+			for j, _ := range r {
+				//深拷贝
+				cp := make([]rune, len(r))
+				_ = copy(cp, r)
+				cp[j], cp[len(cp)-1] = cp[len(cp)-1], cp[j]
+				newResults = append(newResults, cp)
+				// fmt.Println(string(r), "---", j, "----", string(cp))
+			}
+		}
 
-        if len(result) == 0 {
-            first := []rune{chars[0]}
-            result = append(result, first)
-        }
+		if len(result) == 0 {
+			first := []rune{chars[0]}
+			result = append(result, first)
+			if len(first) == len(s) {
+				resultString = append(resultString, string(first))
+			}
+		}
 
-        for _, nr := range newResults {
-            result = append(result, nr)
-            // fmt.Printf("%v\t", string(nr))
-        }
-        // fmt.Printf("\n")
+		for _, nr := range newResults {
+			result = append(result, nr)
+			strNr := string(nr)
+			if _, ok := mapStr[strNr]; !ok && len(nr) == len(s) {
+				resultString = append(resultString, strNr)
+				mapStr[strNr] = true
+			}
+		}
 
-    }
+	}
 
-    resultString := make([]string, 0, len(result)/2)
-    mapStr := make(map[string]bool)
-    for _, r := range result {
-        if len(r) == len(chars) {
-            if !mapStr[string(r)] {
-                mapStr[string(r)] = true
-                resultString = append(resultString, string(r))
-            }
-        }
-    }
+	if len(resultString) == 0 {
+		return []string{""}
+	}
 
-    if len(resultString) == 0 {
-        return []string{""}
-    }
-
-    return resultString
+	return resultString
 }
