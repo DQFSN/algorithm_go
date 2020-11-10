@@ -1,3 +1,11 @@
+package main
+
+type TreeNode struct {
+    Val int
+    Left *TreeNode
+    Right *TreeNode
+}
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -27,4 +35,8 @@ func traversal(root *TreeNode, l int, res *[][]int) {
         traversal(root.Right,l+1,res)
     }
 
+}
+
+func main()  {
+    
 }
